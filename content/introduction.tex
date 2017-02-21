@@ -25,4 +25,40 @@ Detecting attacks is not easy and network monitory often comes at a cost.
 It is important though especially in large systems when the attack surface grows.
 The challenge is to find a good compromise between security and performance.
 
+\subsection{Attacker Model and Locations}
+We generally assume the attacker to be (in) the network.
+They can perform any active or passive attack but cannot break cryptographic primitives.
+Active attacks are attacks where some influence is measurable e.g.\ a delay, modifications or replays whereas a passive attack simply stands for eavesdropping messages.
+This model is called the Dolev-Yao attacker model.\\
 
+Attackers can be located on different parts of the network and depending on this location different attacks are possible.
+If the attacker is close to you they are able to perform active attacks like message modifications on you.
+This can be circumvented by communicating over a secure tunnel though.
+If the attacker is close to your servers, timing attacks are possible where attackers can measure how long certain operations take to break into the system.
+The last possibility is that the attacker is somewhere in the Internet.
+Since the end user has no control over how packets are routed, attackers can modify the path they take for example.
+
+\subsection{Security Goals}
+\begin{description}
+  \item[Data Integrity] No improper or unauthorized change of data
+  \item[Confidentiality] Concealment of information
+  \item[Availability] Services should be available and function correctly
+  \item[Authenticity] Entity is who she claims to be
+  \item[Accountability] Identify the entity responsible for any communication event
+  \item[Controlled Access] Only authorized entities can access certain services or information
+\end{description}
+
+\subsection{Threads}
+We define a thread in a communication as any possible event or sequence of actions that might lead to a violation of one or more security goals.
+The actual realization of a thread is then called attack.\\
+
+Different threads are possible:
+\begin{itemize}[noitemsep, topsep=0pt]
+  \item \textbf{Masquerade}: An entity claims to be another entity (also called ``impersonation'')
+  \item \textbf{Eavesdropping}: An entity reads information it is not intended to read
+  \item \textbf{Loss or Modification of (transmitted) Information}: Data is being altered or destroyed
+  \item \textbf{Denial of Communication Acts (Repudiation)}: An entity falsely denies its participation in a communication act
+  \item \textbf{Forgery of Information}: An entity creates new information in the name of another entity
+  \item \textbf{Sabotage/Denial of Service}: Any action that aims to reduce the availability and / or correct functioning of services or systems
+  \item \textbf{Authorization Violation:}: An entity uses a service or resources it is not intended to use
+\end{itemize}
