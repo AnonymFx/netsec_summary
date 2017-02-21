@@ -1,0 +1,31 @@
+%!TEX root = ../report.tex
+
+\section{Language-theoretic Security}
+Communication protocols define the procedure and the format of exchanged messages.
+If two communication partners speak the same protocol it is not necessarily given that they have the same understanding though.
+Different problems may arise which result in some guidelines to avoid them:
+
+\begin{description}
+  \item[Full input recognition] Programmers usually assume well formed input where in reality the input is controlled by the attacker.
+    For this reason every input should be checked if it fulfills the expectations of valid inputs.
+  \item[Only Type 2 or 3 of Chomsky Hierarchy grammars for inputs]
+    Do not define turing-complete protocols because recognition of the input and testing the equivalence of implementations is undecidable.
+    \begin{figure}[h]
+      \centering
+      \begin{tabular}{l l l}
+        Grammar & Language & Recognized by\\
+        \midrule
+        Type 3 & Regular & Finite state automaton\\
+        Type 2 & Context-free & Pushdown automaton\\
+        Type 1 & Context-sensitive & Some weird stuff\\
+        Type 0 & recursively enumerable & Turing machine\\
+      \end{tabular}
+      \caption{Chomsky Hierarchy of Languages}
+    \end{figure}
+  \item[Reduce computing power] Reduce the computing power exposed to the outside.
+    Computing power that is not there can not be exploited.
+    This also includes defining protocols only in type 2 or 3 languages since parsing types 0 and 1 requires large or potentially unlimited amounts of computing.
+  \item[Same interpretation of messages] All participants of a communication should interpret messages the same way.
+    For this parsers have to be equivalent which is only decidable for type 2 and 3.
+\end{description}
+
