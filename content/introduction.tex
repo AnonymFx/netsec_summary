@@ -1,0 +1,28 @@
+%!TEX root = ../report.tex
+
+\section{Introduction}
+
+\subsection{Attacks and Attack Detection}
+Attacks can have different impacts on the target.
+Disruptive attacks try to fully deny the service (DoS) of the victim whereas degrading ones only occupy parts of the resources.
+A DoS attack can also executed distributed, a so called DDoS
+Attackers might also try to gain confidential data or control the target system.
+Port scans can be used to gain information about the network topology, operating systems and applications or application versions.\\
+
+To be able to tell if a system is under attack, different measures can be taken at different points in the system.\\
+Host intrusion detection systems (HIDS) are located on the host system.
+This enables easy detection using information available on the potential victim system but it has to be present on every system (expensive deployment) and the attack actually reaches the victim and is not detected in advance.
+Network intrusion detection systems (NIDS) lay on the network layer which enables the detection of attacks before they reach the host.\\
+One of the detection methods available is knowledge-based detection.
+Known signatures of attacks are compared to the actual traffic and if the patterns match an alarm is raised.
+This only detects known attacks though.
+To improve this shortcoming, anomaly detection in traffic, protocol or applciaiton behavior can be used.
+Anomalies can be detected with different metrics in mind.
+A very simple one might be the number of request, but this does not take legitimate change in traffic into account.
+A better approach is using cumulative sums which are low if the average is small or whenever only small amounts of values are large but grows if the amount of large values grows in a certain point in time.
+The disadvantage of anomaly detection though is that oftentimes the rate of false-positives is high.\\
+Detecting attacks is not easy and network monitory often comes at a cost.
+It is important though especially in large systems when the attack surface grows.
+The challenge is to find a good compromise between security and performance.
+
+
