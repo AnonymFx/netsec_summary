@@ -19,6 +19,20 @@ And also do not forget key management.
 We define a cipher as secure if it is impossible for attackers to recover they key, the entire or even any character of the plaintext from the ciphertext 
 This is the case if it is indistinguishable from a random string with uniform distribution of the character probabilities.
 
+\subsection{Hash Functions}
+Hash functions are functions which take inputs of arbitrary and transform them to a fixed length output.
+Cryptographic hash functions must also have the following properties:
+\begin{itemize}
+  \item \textbf{Pre-image resistance}: It is infeasible to find an $x'$ s.t.\ $H(x') = H(x)$ for given $H(x)$ and randomly chosen $x$.
+  \item \textbf{Second pre-image resistance}: It is infeasible to find an $x' \neq x$ s.t.\ $H(x') = H(x)$ for a given $x$.
+  \item \textbf{Collision resistance}: It is infeasible to find $x' \neq x$ s.t.\ $H(x) = H(x')$.
+\end{itemize}
+This implies that the that cryptographic hash functions have to be one-way functions.
+These are functions where it is computationally infeasible to calculate the inverse function.\\
+
+Cryptographic has functions can be used for authentication, pseudo-random number generation ($b_0 = seed$ and $b_i+1 = H(b_i|seed)$) or encryption (e.g.\ in OFB).
+An example is SHA-3.
+
 \subsection{Symmetric Cryptography}
 In symmetric encryption two communication partners Alice and Bob share a secret key that is used for encryption and decryption or message authentication.
 
@@ -102,7 +116,7 @@ The problem thereby is that identical plaintext blocks result in the same cipher
 \begin{figure}[H]
   \centering
   \includegraphics[width=.8\textwidth]{figures/cbc_encrypt.png}
-  \caption{CBC Encrypt}
+  \caption{CBC Encrypt}\label{fig:cbc_encrypt}
 \end{figure}
 CBC uses the ciphertext from the previous block xored with the current message block and the unmodified key k as inputs of the encryption function $c_i = Enc_k(c_{i-1} \oplus m_i)$.
 For the first message, where no previous cipher block is available, an initialization vector (IV) is used which may be sent in plaintext and is fresh for every massage (or packet if the message is split across multiple packets).\\
@@ -151,7 +165,7 @@ Decryption is done by $m_i = Enc_k(ctr_i) \oplus c_i$.
 \subsubsection{Message Authentication Code (MAC)}
 MACs are used in symmetric cryptography to ensure message authenticity but do not provide replay protection.
 They are transmitted with the message $\langle m,t \rangle$.
-In practice, MACs are either based on hash functions (HMAC), CBC (CMAC) or included in the encryption (authenticated encryption modes).
+In practice, MACs are either based on hash functions (HMAC), CBC or included in the encryption (authenticated encryption modes).
 
 We define the following terminology:
 \begin{itemize}[noitemsep,topsep=0pt]
@@ -172,17 +186,28 @@ $\mathcal{A}$ then sends an arbitrary amount of messages to $\mathcal{C}$ for wh
 At some point, $\mathcal{A}$ will generate a message-tag pair $\langle m',t' \rangle$ where $m$ was not previously sent to $\mathcal{C}$
 The attack is successful, iff $Vrfy_k(m',t') = 1$, so if $\mathcal{A}$ was able to generate a valid MAC tag for a new message.
 
+\paragraph{Hash MAC (HMAC)}
+HMAC uses cryptographic hash functions to calculate the MAC\@.
+It is calculated with
+\begin{equation*}
+  t = H(K \oplus opad~|~H(K \oplus ipad | m))
+\end{equation*}
+To note here is that $K$ is first extended to the block length required for the input of the hash function by appending zeros.
+$opad$ and $ipad$ are arbitrary values with the restriction that they have a large Hemming distance to each other.\\
+Another note: $H(K~|~m)$, $H(m~|~K)$ or $H(K~|~p~|~m~|~K)$ are not secure.
+
+\paragraph{CBC-MAC}
+CBC-MAC encrypts the message to authenticate with another key than used for encryption and uses the last ciphertext block as MAC\@.
+CBC is shown in Figure~\ref{fig:cbc_encrypt}.
+If the length of a message is not known or no other protection exists, CBC-MAC can be prone to length extension attacks.
+CMAC resolves this.
+
+\paragraph{CMAC}
+CMAC is an improved version of CBC-MAC which has to keys, calculated from the shared key, where one is used for xoring with complete bocks before encryption and the other one for incomplete blocks.
+XCBC-MAC is another improvement of this where the two keys are input to the algorithm and not derived from k.
+
 \subsubsection{Combining Confidentiality and Authentication}
 Generally the best approach to combine confidentiality and authentication is to first encrypt and then authenticate, i.e.\ $c \leftarrow Enc_{k_1}(m)$, $t \leftarrow Mac_{k_2}(c)$ and transmit $\langle c,t \rangle$.
-
-\subsection{Hash Functions}
-Hash functions are functions which take inputs of arbitrary and transform them to a fixed length output.
-Cryptographic hash functions must also have the following properties:
-\begin{itemize}
-  \item \textbf{Pre-image resistance}: It is infeasible to find an $x'$ s.t.\ $H(x') = H(x)$ for given $H(x)$ and randomly chosen $x$.
-  \item \textbf{Second pre-image resistance}: It is infeasible to find an $x' \neq x$ s.t.\ $H(x') = H(x)$ for a given $x$.
-  \item \textbf{Collision resistance}: It is infeasible to find $x' \neq x$ s.t.\ $H(x) = H(x')$.
-\end{itemize}
 
 \subsection{Asymmetric Cryptography}
 In asymmetric cryptography, the two communication partners no longer have one shared key, but each participant has a key pair.
@@ -212,7 +237,7 @@ Key generation in RSA is done with the following procedure:
 Encryption then is defined as $RSA_{pk}(y) := [y^e \mod N]$ and decryption as $RSA_{sk}(y) = [z^d \mod N]$.
 
 \paragraph{Chosen-ciphertext Attack (CCA)}
-An asymmetric encryption scheme is considered secure if it withstands CCA.
+An asymmetric encryption scheme is considered secure if it withstands CCA\@.
 \begin{figure}[H]
   \centering
   \includegraphics[width=.8\textwidth]{figures/cca.png}
