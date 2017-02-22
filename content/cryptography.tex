@@ -33,6 +33,21 @@ These are functions where it is computationally infeasible to calculate the inve
 Cryptographic has functions can be used for authentication, pseudo-random number generation ($b_0 = seed$ and $b_i+1 = H(b_i|seed)$) or encryption (e.g.\ in OFB).
 An example is SHA-3.
 
+\subsection{Randomness}
+We define randomness as unpredictability or entropy.
+A measure for entropy is the Shannon information entropy calculation
+\begin{equation*}
+  H(X) = - \sum_x P(X = x)ln_2(P(X=x))
+\end{equation*}
+where X is a random variable outputting a sequence of $n$ bits.
+This entropy and thus randomness is maximized ($H(X) = n$)if bits are uniformly distributed.\\
+
+Randomness is an important part of cryptography, e.g.\ for generating keys.
+In computing, there is no true randomness though since computers are deterministic.
+For this reason, cryptographically secure pseudo random number generators (CSPRNG) are used which are deterministic algorithms that take truly random, binary input sequences (seed) and output a random-looking sequence of numbers.
+These unpredictable inputs might either be values resulting from physical phenomena (time between emission of particles, thermal noise of semiconductor, \dots) or from software (elapsed time between keystrokes, packet interarrival times, \dots).
+
+
 \subsection{Symmetric Cryptography}
 In symmetric encryption two communication partners Alice and Bob share a secret key that is used for encryption and decryption or message authentication.
 
@@ -244,6 +259,7 @@ An asymmetric encryption scheme is considered secure if it withstands CCA\@.
 \end{figure}
 CCA is quite similar to CPA except $\mathcal{A}$ sends ciphertext messages to $\mathcal{C}$ for probing instead of plaintext ones.
 A restriction not depicted in the illustration above is that $\mathcal{A}$ may not request a decryption for $Enc_{pk}(m_b)$ itself.
+\newpage
 
 \paragraph{Optimal Asymmetric Encryption Padding (OAEP)}
 OAEP is a padding scheme for asymmetric encryption depicted below.
