@@ -20,7 +20,7 @@ We define a cipher as secure if it is impossible for attackers to recover they k
 This is the case if it is indistinguishable from a random string with uniform distribution of the character probabilities.
 
 \subsection{Symmetric Cryptography}
-In symmetric encryption two communication partners Alice and Bob share a secret key that is used for encryption and decryption.
+In symmetric encryption two communication partners Alice and Bob share a secret key that is used for encryption and decryption or message authentication.
 
 We use the following terminology:
 \begin{itemize}[noitemsep, topsep=0pt]
@@ -43,13 +43,37 @@ Getting any information about k from an attack is also considered a successful o
 
 To analyze the security, cryptography uses attack games where $\mathcal{C}$ is the challenger and $\mathcal{A}$ the adversary.
 
-Possible attack scenarios are:
+Possible attack scenarios are listed in the following, of which some are explained more precisely below:
 \begin{itemize}[noitemsep, topsep=0pt]
   \item Ciphertext-only-attack: attacker knows c
   \item Known-plaintext-attack: For a fixed k, the attacker got a pair (m, c) and tries to learn something about other ciphertexts
   \item Chosen-plaintext (CPA) and chosen-ciphertext attack: similar to previous attack, but attacker can chose m or c freely
 \end{itemize}
 \vspace{10pt}
+
+We consider symmetric ciphers to be secure if they withstand CPA\@.
+
+\paragraph{The Eavesdropping Experiment}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{figures/eavesdropping_experiment.png}
+\end{figure}
+In the eavesdropping experiment, $\mathcal{C}$ first generates a random key $k$.
+After that, $\mathcal{A}$ sends them two messages $m_0$ and $m_1$ for encryption with $|m_0| = |m_1|$.
+$\mathcal{C}$ then chooses one of the two messages and encrypts it.
+If $\mathcal{A}$ can tell which message $\mathcal{C}$ chose, the attack was successful.
+If this happens with probability $0.5 + negligible$ the used cipher is secure.
+
+\paragraph{Chosen-plaintext Attack}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.8\textwidth]{figures/cpa.png}
+\end{figure}
+In the chosen-plaintext attack the fist step again is that $\mathcal{C}$ generates a random key k.
+$\mathcal{A}$ is then allowed to send an arbitrary amount of messages to $\mathcal{C}$ who will encrypt and send them back to $\mathcal{A}$ which means that $\mathcal{C}$ is an ``oracle'' for $\mathcal{A}$.
+At some point, $\mathcal{A}$ will send two messages $m_0$ and $m_1$ of equal length of which $\mathcal{C}$ chooses one, encrypts it and sends the result back to $\mathcal{A}$.
+$\mathcal{A}$ is then again allowed to use $\mathcal{C}$ as oracle for an arbitray amount of messages and if they are at some point able to tell which message ($m_0$ or $m_1$) $\mathcal{C}$ encrypted, the attack is successful.
+
 
 \subsubsection{Block and Stream Ciphers}
 A block cipher encrypts and decrypts inputs of length n to outputs of length n ($\Rightarrow$ block length n).
@@ -107,7 +131,6 @@ In the first step an IV is used as $k_{i-1}$.
   \caption{OFB Decrypt}
 \end{figure}
 Decryption is the same procedure except that the key stream is xored with the cipher text blocks.
-\newpage
 
 \subsubsection{Counter Mode (CTR)}
 \begin{figure}[H]
@@ -124,3 +147,124 @@ Like OFB, CTR also transforms block ciphers into stream ciphers.
   \caption{CTR Decrypt}
 \end{figure}
 Decryption is done by $m_i = Enc_k(ctr_i) \oplus c_i$.
+
+\subsubsection{Message Authentication Code (MAC)}
+MACs are used in symmetric cryptography to ensure message authenticity but do not provide replay protection.
+They are transmitted with the message $\langle m,t \rangle$.
+In practice, MACs are either based on hash functions (HMAC), CBC (CMAC) or included in the encryption (authenticated encryption modes).
+
+We define the following terminology:
+\begin{itemize}[noitemsep,topsep=0pt]
+  \item Key $k \leftarrow Gen(1^n)$
+  \item Tag $t \leftarrow Mac_k(m)$
+  \item Verification $b := Vrfy_k(m,t)$ where $b=1$ means valid and $b=0$ invalid
+\end{itemize}
+
+We define a MAC as secure, if it withstands the adaptive chosen-message attack.
+
+\paragraph{Adaptive Chosen-message Attack}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{figures/adaptive_chosen-message_attack.png}
+\end{figure}
+In the adaptive chosen-message attack $\mathcal{C}$ first generates a random key $k$.
+$\mathcal{A}$ then sends an arbitrary amount of messages to $\mathcal{C}$ for which they answer with a message consisting of the original message and a tag $t$.
+At some point, $\mathcal{A}$ will generate a message-tag pair $\langle m',t' \rangle$ where $m$ was not previously sent to $\mathcal{C}$
+The attack is successful, iff $Vrfy_k(m',t') = 1$, so if $\mathcal{A}$ was able to generate a valid MAC tag for a new message.
+
+\subsubsection{Combining Confidentiality and Authentication}
+Generally the best approach to combine confidentiality and authentication is to first encrypt and then authenticate, i.e.\ $c \leftarrow Enc_{k_1}(m)$, $t \leftarrow Mac_{k_2}(c)$ and transmit $\langle c,t \rangle$.
+
+\subsection{Hash Functions}
+Hash functions are functions which take inputs of arbitrary and transform them to a fixed length output.
+Cryptographic hash functions must also have the following properties:
+\begin{itemize}
+  \item \textbf{Pre-image resistance}: It is infeasible to find an $x'$ s.t.\ $H(x') = H(x)$ for given $H(x)$ and randomly chosen $x$.
+  \item \textbf{Second pre-image resistance}: It is infeasible to find an $x' \neq x$ s.t.\ $H(x') = H(x)$ for a given $x$.
+  \item \textbf{Collision resistance}: It is infeasible to find $x' \neq x$ s.t.\ $H(x) = H(x')$.
+\end{itemize}
+
+\subsection{Asymmetric Cryptography}
+In asymmetric cryptography, the two communication partners no longer have one shared key, but each participant has a key pair.
+A private/secure key (sk) that is only known to one person and is used for decryption and message signing and a public key (pk) that can be published and is used for encryption and message verification.
+Asymmetric cryptography is based on mathematical problems which are believed to be hard (e.g.\ integer factorization).
+It only needs an authenticated channel to exchange keys of which less amounts are required than in the symmetric setting.
+It is orders of magnitudes slower though.
+
+\subsubsection{Public-key Encryption Scheme}
+\begin{enumerate}
+  \item $(pk,sk) \leftarrow Gen(1^n)$
+  \item Encryption with public key: $c \leftarrow Enc_{pk}(m)$
+  \item Decryption with private key: $m := Dec_{sk}(c)$
+\end{enumerate}
+
+\paragraph{RSA}
+Key generation in RSA is done with the following procedure:
+\begin{enumerate}
+  \item $(N,p,q) \leftarrow GenModulus(1^n)$
+  \item $\phi(N) := (p-1)(q-1)$
+  \item find $e$: $\gcd(e,\phi(N)) = 1$
+  \item $d := [e^{-1} \mod \phi(N)]$
+  \item $pk = \langle N,e \rangle$
+  \item $sk = \langle N,d \rangle$
+\end{enumerate}
+
+Encryption then is defined as $RSA_{pk}(y) := [y^e \mod N]$ and decryption as $RSA_{sk}(y) = [z^d \mod N]$.
+
+\paragraph{Chosen-ciphertext Attack (CCA)}
+An asymmetric encryption scheme is considered secure if it withstands CCA.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.8\textwidth]{figures/cca.png}
+\end{figure}
+CCA is quite similar to CPA except $\mathcal{A}$ sends ciphertext messages to $\mathcal{C}$ for probing instead of plaintext ones.
+A restriction not depicted in the illustration above is that $\mathcal{A}$ may not request a decryption for $Enc_{pk}(m_b)$ itself.
+
+\paragraph{Optimal Asymmetric Encryption Padding (OAEP)}
+OAEP is a padding scheme for asymmetric encryption depicted below.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{figures/oaep.png}
+\end{figure}
+
+RSA used in conjunction with OAEP is secure under CCA\@.
+
+\subsubsection{Signature Scheme}
+\begin{enumerate}
+  \item $(pk,sk) \leftarrow Gen(1^n)$
+  \item Signature generation with private key: $\sigma \leftarrow Sign_{sk}(m)$
+  \item Signature verification with public key: $b := Vrfy_{pk}(m,\sigma)$ where $b = 1$ means valid and $b = 0$ invalid
+\end{enumerate}
+Signatures are often slower than their MAC relatives and provide non-repudiation.
+A signature scheme is considered secure if it withstands the adaptive chosen-message attack.
+\newpage
+
+\paragraph{RSASSA-PSS}
+RSASSA-PSS is a signature scheme that uses RSA\@.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.8\textwidth]{figures/rsassa-pss.png}
+\end{figure}
+RSASSA-PSS is secure under adaptive chosen-message attack and breaking it would mean that RSA is broken.
+
+\subsection{Hybrid Approach}
+Since public key cryptography is slower than secret key cryptography, a hybrid approach is often advisable.
+Public-key cryptography is used to protect a shared key (session key) that is used for any further communication via secret-key cryptography.
+They private key for the key exchange is called long-term key.\\
+
+\textbf{Perfect forward security} is often an important property of this approach.
+It states that if an attacker gains access to the long-term key or the session key, they should not be able to decrypt messages of past sessions.\\
+
+A common strategy is to use a signed Diffie-Hellman key exchange and a secret-key authenticated encryption scheme for communication.
+To guarantee perfect forward secrecy, DH keys have to be calculated for every connection and old keys have to be wiped.
+\newpage
+
+\subsubsection{Diffie-Hellman Key Exchange (DH)}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{figures/diffie-hellmann.png}
+\end{figure}
+In the first step of the DH key exchange, communication partner A selects a prime $p$, a generator $g$ which is a primitive root for the cyclic group of $\mathds{Z}_p$ and a random number $a \in \mathds{Z}_p$.
+A then calculates $X = g^a \mod p$ and sends it with $p$ and $g$ to B.
+B also chooses a random number $b \in \mathds{Z}_p$ and calculates $Y = g^b \mod p$ which they send back to A.
+Both can then calculate the key $k$ by $k = Y^a = g^{ba} = g^{ab} = X^b~\mod p$.
