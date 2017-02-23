@@ -293,7 +293,7 @@ Since public key cryptography is slower than secret key cryptography, a hybrid a
 Public-key cryptography is used to protect a shared key (session key) that is used for any further communication via secret-key cryptography.
 They private key for the key exchange is called long-term key.\\
 
-\textbf{Perfect forward security} is often an important property of this approach.
+\textbf{Perfect forward secrecy} is often an important property of this approach.
 It states that if an attacker gains access to the long-term key or the session key, they should not be able to decrypt messages of past sessions.\\
 
 A common strategy is to use a signed Diffie-Hellman key exchange and a secret-key authenticated encryption scheme for communication.
