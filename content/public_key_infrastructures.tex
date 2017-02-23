@@ -77,3 +77,12 @@ The idea behind public logs is to store some information about how issues certif
 They are neutral, signed and append-only lists of certifications.\\
 
 In X.509 the log scheme is called Certificate Transparency (CT).
+Monitors and Auditors permanently watch the log to verify its consistency and the inclusion of new certificate chains.
+Thereby monitors primary function is to verify the append-only property and anyone is able to run one.
+Their may also keep copies of logs and search for violating certificate issuances.
+Auditors are less powerful entities which the log's consistency.
+This is usually done by browsers.\\
+To perform these checks and proofs, a Merkle tree structure (hash tree) is used to store the logs.\\
+To simplify the inclusion proof of a certificate issuance in a log, signed certificate timestamps (SCT) can be used.
+They represent vaguely a receipt you get if you enter a certificate into a log.
+If an auditor gets a SCT of a log it trusts, it (nearly) replaces the traditional inclusion proof.
