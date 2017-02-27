@@ -11,13 +11,13 @@ Negligibility is defined as $f(n) < \frac{1}{p(n)}$ for a polynomial p and suffi
 Kerckhoff's principle states that the cipher method must not be required to be secret, and it must be able to fall into the hands of the enemy without inconvenience.
 Thus only the key needs to be secret.\\
 
-It is advisable to use only standardized schemes from libraries and RTFM (read the fucking manual) because implementing own schemes has a lot of pitfalls and is more often or almost always done wrong.
+It is advisable to use only standardized schemes from libraries and to RTFM (read the fucking manual) because implementing own schemes has a lot of pitfalls and is more often or almost always done wrong.
 One also has to keep in mind, that encryption alone does not imply that the system is secure, often integrity and authenticity are more important than confidentiality.
 And also do not forget key management.
 
 \subsubsection*{Security of Ciphers}
-We define a cipher as secure if it is impossible for attackers to recover they key, the entire or even any character of the plaintext from the ciphertext 
-This is the case if it is indistinguishable from a random string with uniform distribution of the character probabilities.
+We define a cipher as secure if it is impossible for attackers to recover they key, the entire or even any character of the plaintext from the ciphertext.
+This is the case if the ciphertext is indistinguishable from a random string with uniform distribution of the character probabilities.
 
 \subsection{Hash Functions}
 Hash functions are functions which take inputs of arbitrary and transform them to a fixed length output.
@@ -40,7 +40,7 @@ A measure for entropy is the Shannon information entropy calculation
   H(X) = - \sum_x P(X = x)ln_2(P(X=x))
 \end{equation*}
 where X is a random variable outputting a sequence of $n$ bits.
-This entropy and thus randomness is maximized ($H(X) = n$)if bits are uniformly distributed.\\
+This entropy and thus randomness is maximized ($H(X) = n$) if bits are uniformly distributed.\\
 
 Randomness is an important part of cryptography, e.g.\ for generating keys.
 In computing, there is no true randomness though since computers are deterministic.
@@ -62,21 +62,21 @@ We use the following terminology:
 \end{itemize}
 
 \subsubsection{One-Time-Pad (OTP): A Perfect Cypher}
-For the OTP a perfectly random bitstream opt with the length of the message to encode is needed.
+For the OTP a perfectly random bitstream $opt$ with the length of the message to encode is needed.
 Then the encryption operation is defined as $Enc_{otp}(m) = m \oplus otp$ and the decryption operation as $Dec_{otp}(c) = c \oplus otp$
 For the OTP to be perfectly secure, the key must only be used once which is impractical in the real world where we usually want $length(k) \ll length(m)$ and thus reusable keys.
 
 \subsubsection{Attacking Symmetric Ciphers}
-The goals of attacks on ciphers is to learn something about m given a c.
-Getting any information about k from an attack is also considered a successful one.\\
+The goals of attacks on ciphers is to learn something about $m$ given a $c$.
+Getting any information about $k$ from an attack is also considered a successful one.\\
 
 To analyze the security, cryptography uses attack games where $\mathcal{C}$ is the challenger and $\mathcal{A}$ the adversary.
 
 Possible attack scenarios are listed in the following, of which some are explained more precisely below:
 \begin{itemize}[noitemsep, topsep=0pt]
-  \item Ciphertext-only-attack: attacker knows c
-  \item Known-plaintext-attack: For a fixed k, the attacker got a pair (m, c) and tries to learn something about other ciphertexts
-  \item Chosen-plaintext (CPA) and chosen-ciphertext attack: similar to previous attack, but attacker can chose m or c freely
+  \item Ciphertext-only-attack: attacker knows $c$
+  \item Known-plaintext-attack: For a fixed $k$, the attacker got a pair $(m, c)$ and tries to learn something about other ciphertexts
+  \item Chosen-plaintext (CPA) and chosen-ciphertext attack: similar to previous attack, but attacker can chose $m$ or $c$ freely
 \end{itemize}
 \vspace{10pt}
 
@@ -105,7 +105,7 @@ $\mathcal{A}$ is then again allowed to use $\mathcal{C}$ as oracle for an arbitr
 
 
 \subsubsection{Block and Stream Ciphers}
-A block cipher encrypts and decrypts inputs of length n to outputs of length n ($\Rightarrow$ block length n).
+A block cipher encrypts and decrypts inputs of length $n$ to outputs of length $n$ ($\Rightarrow$ block length $n$).
 A steam cipher on the other hand generates a random bitstream with arbitrary length, called keystream, that is xored to the plain text to encrypt and decrypt.\\
 The most advisable cipher to use is probably the AES block cipher.
 It is well tested and proven to be (mostly) secure and hardware supported what makes it quite fast ($>2GB/s$ with HW support, $200Mbit/s$ without).
@@ -115,7 +115,7 @@ Modes of encryption are necessary to handle messages of variable length with blo
 The plaintext therefore is split into parts of length equal to the cipher block length.
 If the last block is shorter than the block length, we add padding.
 
-\subsubsection{Electronic Code Book Mode (ECB)}
+\paragraph{Electronic Code Book Mode (ECB)}
 \begin{figure}[H]
   \centering
   \includegraphics[width=.8\textwidth]{figures/ecb.png}
@@ -127,7 +127,7 @@ The problem thereby is that identical plaintext blocks result in the same cipher
   \includegraphics[width=.8\textwidth]{figures/ecb_problem.png}
 \end{figure}
 
-\subsubsection{Cipher Block Chaining Mode (CBC)}
+\paragraph{Cipher Block Chaining Mode (CBC)}
 \begin{figure}[H]
   \centering
   \includegraphics[width=.8\textwidth]{figures/cbc_encrypt.png}
@@ -143,7 +143,7 @@ Compared to ECB, the advantage is that equal plaintext blocks/messages are not e
 \end{figure}
 Decryption is defined by $m_i = c_{i-1} \oplus Dec_k(c_i)$.
 
-\subsubsection{Output Feedback Mode (OFB)}
+\paragraph{Output Feedback Mode (OFB)}
 \begin{figure}[H]
   \centering
   \includegraphics[width=.8\textwidth]{figures/ofb_encrypt.png}
@@ -161,7 +161,7 @@ In the first step an IV is used as $k_{i-1}$.
 \end{figure}
 Decryption is the same procedure except that the key stream is xored with the cipher text blocks.
 
-\subsubsection{Counter Mode (CTR)}
+\paragraph{Counter Mode (CTR)}
 \begin{figure}[H]
   \centering
   \includegraphics[width=.8\textwidth]{figures/ctr_encrypt}

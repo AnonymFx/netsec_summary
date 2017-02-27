@@ -17,7 +17,7 @@ A protocol describes how the algorithms should be used.
   \item Protocol Interaction: Make one protocol interact with another, e.g.\ by utilizing that principles use the same long-term keys in both protocols and utilizing that for an attack.
 \end{itemize}
 
-\subsubsection{Desirable Properties of Cryptographic Protocols}
+\subsection{Desirable Properties of Cryptographic Protocols}
 \begin{itemize}[noitemsep, topsep=0pt]
   \item Authenticity
   \item Integrity
@@ -44,7 +44,7 @@ Keys need to be exchanged in order to have a secure channel to communicate, not 
 In order to establish session keys Alice and Bob either must have a long-term shared key, each others public keys or an exchanged key with a trusted third party (TTP).
 The latter approach thereby is the most scaleable one in terms of key management.
 Our first try for this is shown in Figure~\ref{fig:ooppt1}.
-In the figure the ${}_K$ means an encrypted and integrity-protected message.\\
+In the figure the $\{\}_K$ means an encrypted and integrity-protected message.\\
 \begin{figure}[h]
   \centering
   \includegraphics[width=.8\textwidth]{figures/ooppt1.png}
@@ -108,7 +108,7 @@ For this reason, we change the authenticated messages.
 \end{figure}
 \newpage
 
-To decrease complexity, what makes analysis harder and the attack surface bigger, we split the second message into two (request-response pairs).
+To decrease complexity, what makes analysis easier and the attack surface smaller, we split the second message into two (request-response pairs).
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{figures/ooppt7.png}

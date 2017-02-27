@@ -34,7 +34,7 @@ Note here that including the protocol allows applying IPsec differently for diff
 The information of how to use security services to the now identified packets is called \textbf{security policy (SP)}.
 These contain information about the security protocol (AH or ESP), protocol mode (tunnel or transport), the action to take (discard, secure, bypass) and other parameters like the policy lifetime.
 SPs have to be set up by the system administrator.
-The second database used is called \textbf{security associations database (SAD)} and contains informations about how to process incoming and outgoing packet, i.e.\ how to apply encryption/authentication algorithms.
+The second database used is called \textbf{security associations database (SAD)} and contains informations about how to process incoming and outgoing packets, i.e.\ how to apply encryption/authentication algorithms.
 Every entry, called \textbf{security association (SA)}, is identified by an \textbf{security parameter index (SPI)}.
 This index is specified by the receiving end during the SA negotiations (in step one of the previously described model) and will be sent included in the IPSec protocol headers.
 The security associations store informations about the IP source and destination address, the security protocol (AH or ESP), the current sequence number, the algorithms and keys used for the security protocols (and other data needed like an IV), the SA lifetime, the protocol mode (tunnel or transport) and other relevant informations.

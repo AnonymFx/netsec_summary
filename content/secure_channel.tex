@@ -5,11 +5,11 @@ A secure channel is a confidential, integrity protected and authenticated commun
 
 We will use the previously discussed cryptographic schemes to achieve this.
 Despite knowing our modules to achieve most (confidentiality, authenticity) of the points from above, there are still some freedoms to put them together.\\
-MAC-then-Encrypt ($Enc_{k-enc}(m,MAC_{k-int}(m))$)first authenticates the message and then encrypts the message as well as the MAC.\\
-SSL uses this scheme, but many attacks on the protocol result from this.
-MAC-and-Encrypt ($Enc_{k-enc}(m),MAC_{k-int}(m)$) calculates the MAC and simply appends it to the encrypted message.
+MAC-then-Encrypt ($Enc_{k-enc}(m,MAC_{k-int}(m))$) first authenticates the message and then encrypts the message as well as the MAC.
+SSL uses this scheme, but many attacks on the protocol result from this.\\
+MAC-and-Encrypt ($Enc_{k-enc}(m)$, $MAC_{k-int}(m)$) calculates the MAC and simply appends it to the encrypted message.
 This approach is considered the weakest.\\
-Encrypt-then-MAC ($Enc_{k-enc}(m),MAC_{k-int}(Enc_{k-enc}(m))$) is the reversed approach compared to MAC-then-Encrypt.
+Encrypt-then-MAC ($Enc_{k-enc}(m)$, $MAC_{k-int}(Enc_{k-enc}(m))$) is the reversed approach compared to MAC-then-Encrypt.
 It first encrypts the message and then calculates the MAC based on the encrypted message.
 This approach is considered to be the most secure.\\
 For loss and order detection it is possible to simply use a counter appended to the initial message.
@@ -37,7 +37,7 @@ OCB is such an one run encrypt and authenticate method.
 \end{subfigure}
 \caption{OCB}
 \end{figure}
-OCB works as described above with $L_* = Enc_k(0)$, $L_{\$} = double(L_*)$, $L_0 = double(L_{\$})$, $L_i = double(L_i) = double(L_{i-1})$ and $ntz = \text{number of trailing zeros}$.
+OCB works as described above with $L_* = Enc_k(0)$, $L_{\$} = double(L_*)$, $L_0 = double(L_{\$})$, $L_i = double(L_i) = double(L_{i-1})$ and $ntz = number~of~trailing~zeros$.
 Most of the times only a view values for $L_i$ are used, but they can be precomputed and stored in a lookup table.
 To note here is that OCB only needs one key for encryption and authentication but a fresh nonce for each run.
 
@@ -67,7 +67,8 @@ Xoring $C_1$ and $C_2$ results in
 So the attacker can recover $P_1 \oplus P_2$ from $C_1$ and $C_2$ and if they know $P_1$ or $P_2$ they can recover the other.
 
 \subsection{Padding Oracle Attack}
-The padding oracle attack can reduce the attack time from $\mathcal{0}(N^L)$ to an average of $L \cdot \frac{N}{2}$ tries ($N$ is the size of the alphabet, $L$ the password/key length) under certain assumptions by decrypting ciphertexts bitwise.
+The padding oracle attack can reduce the attack time from $\mathcal{O}(N^L)$ to an average of $L \cdot \frac{N}{2}$ tries ($N$ is the size of the alphabet, $L$ the password/key length) under certain assumptions by decrypting ciphertexts bitwise.
+These assumptions are:
 \begin{enumerate}
   \item Attacker gets a ciphertext $C$ with $n$ blocks of length $N$
   \item Oracle that sends padding errors for wrong paddings and MAC errors if padding is correct.
@@ -80,7 +81,7 @@ The padding oracle attack can reduce the attack time from $\mathcal{0}(N^L)$ to 
 The attack starts decrypting the last byte of the last block of the massage $P_{n,N}$ by altering $C_{n-1,N}$ by xoring a value $\vartriangle$ to it $C_{n-1,N}' = C_{n-1,N} \oplus \vartriangle$.
 $C_{n-1,N}'$ then is sent to the oracle.
 If it responds with a padding error try again with a new $\vartriangle$ (max 256 tries, 1 byte!).
-If it returns a MAC error though, we know that padding was fine and thus that $P_{n,N} = 1$ (PKCS7 padding scheme!).
+If it returns a MAC error though, we know that padding was fine and thus that $P_{n,N}' = 1$ (PKCS7 padding scheme!).
 With that information we then can calculate $P_{n,N}$.
 \begin{equation*}
   P_{n,N}' = P_{n,N} \oplus \vartriangle = 1 \rightarrow P_{n,N} = 1 \oplus \vartriangle
