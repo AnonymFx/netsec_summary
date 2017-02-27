@@ -8,7 +8,7 @@ This fills up their connection table with half open connections (sequence number
 A solution for this are TCP SYN cookies.
 
 \subsection{TCP SYN Cookies}
-TCP SYN Cookies are particularly chosen initial sequence numbers $\alpha = h(S,K_{SYN})$ where $K$ is a secret key, $S_{SYN}$ the source address of the SYN packet and $h$ a cryptographic hash function.
+TCP SYN Cookies are particularly chosen initial sequence numbers $\alpha = h(S_{SYN},K)$ where $K$ is a secret key, $S_{SYN}$ the source address of the SYN packet and $h$ a cryptographic hash function.
 On arrival of the ACK message, Bob calculates $\alpha$ again and checks if the ACK number is correct ($\alpha + 1$).
 This process is shown in Figure~\ref{fig:tcp_syn_cookies}.
 \begin{figure}[h]
