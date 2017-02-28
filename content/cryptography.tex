@@ -241,8 +241,8 @@ It is orders of magnitudes slower though.
 \paragraph{RSA}
 Key generation in RSA is done with the following procedure:
 \begin{enumerate}
-  \item $(N,p,q) \leftarrow GenModulus(1^n)$
-  \item $\phi(N) := (p-1)(q-1)$
+  \item $(N,p,q) \leftarrow GenModulus(1^n)\text{, where }N = pq$
+  \item $\phi(N) := lcm(p-1,q-1)$
   \item find $e$: $\gcd(e,\phi(N)) = 1$
   \item $d := [e^{-1} \mod \phi(N)]$
   \item $pk = \langle N,e \rangle$
