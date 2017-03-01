@@ -119,7 +119,7 @@ CHILD\_SAs are sets of security associations used to encrypt and/or integrity-pr
 Additionally to these two exchanges an CREATE\_CHILD\_SA (create new child SA, rekeying) or an INFORMATIONAL exchange (keep-alive, deleting SA, errors, \dots) are possible.
 
 \subsubsection{IKE\_SA\_INIT Exchange}
-Figure~\ref{fig:ike_sa_init} shows the IKE\_SA\_INIT exchange where $SA_{I1}$ are the cryptographic suites which the initiator supports, $SA_{R1}$ the responder's chosen suite, $KE_I$ and $KE_R$ the imitators and responders public Diffie-Hellman values, $N_I$ and $N_R$ nonces and $CERTREQ$ an optional certificate request payload used for authentication via certificates.
+Figure~\ref{fig:ike_sa_init} shows the IKE\_SA\_INIT exchange where $SA_{I1}$ are the cryptographic suites which the initiator supports, $SA_{R1}$ the responder's chosen suite, $KE_I$ and $KE_R$ the initiators and responders public Diffie-Hellman values, $N_I$ and $N_R$ nonces and $CERTREQ$ an optional certificate request payload used for authentication via certificates.
 \begin{figure}[H]
   \centering
   \includegraphics[width=.8\textwidth]{figures/ike_sa_init.png}
