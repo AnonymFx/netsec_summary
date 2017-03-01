@@ -61,7 +61,7 @@ In reality CRLs are barely used since time intervals between CRL updates where t
 
 Another approach is the \textbf{Online Certificate Status Protocol (OCSP)} where CRL-like data structures are maintained on the server-side.
 In practise, every time a TLS handshake is done (not every request, inperformant), a request is sent to these servers asking if a certificate is revoked (possible answers: good, revoked, unknown).
-The approach of not sending OCSP requests for every site request but bundling them together (in the TLS handshake) is called OCSP stapling.\\
+Appending OCSP messages to the TLS handshake is called OSCP stapling.\\
 
 Some other approaches for certificate revocation are in-browser revocation lists which maintain revoked certificates for the most important sites or short-lived certs.
 
@@ -80,7 +80,7 @@ In X.509 the log scheme is called Certificate Transparency (CT).
 Monitors and Auditors permanently watch the log to verify its consistency and the inclusion of new certificate chains.
 Thereby monitors primary function is to verify the append-only property and anyone is able to run one.
 Their may also keep copies of logs and search for violating certificate issuances.
-Auditors are less powerful entities which the log's consistency.
+Auditors are less powerful entities which check the log's consistency.
 This is usually done by browsers.\\
 To perform these checks and proofs, a Merkle tree structure (hash tree) is used to store the logs.\\
 To simplify the inclusion proof of a certificate issuance in a log, signed certificate timestamps (SCT) can be used.

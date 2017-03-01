@@ -8,7 +8,7 @@ A protocol describes how the algorithms should be used.
 \begin{itemize}[noitemsep, topsep=0pt]
   \item Replay attack: replay messages
   \item Oracle attack: ask oracles about stuff one can normally not do
-  \item Typing attack: Replace message field of one type with on of another type
+  \item Typing attack: Replace message field of one type with one of another type
   \item Modification: Attacker alters messages sent.
   \item Preplay: The attacker takes part in a protocol run prior to a protocol run.
   \item Reflection: The attacker sends back protocol messages to principles who sent them. Related to Oracle attacks.
@@ -74,7 +74,7 @@ Having dealt with that, another problem presents itself: oracle attacks are stil
 \newpage
 
 Now we can add forward secrecy by using Diffie-Hellman as shown in Figure~\ref{fig:ooppt3}.
-$DH_B$ is integrity protected because ${A, N_A, N_B}_{K_{A,B}}$ is already encrypted with the key derived from the Diffie-Hellman exchange.
+$DH_B$ is integrity protected because $\{A, N_A, N_B\}_{K_{A,B}}$ is already encrypted with the key derived from the Diffie-Hellman exchange.
 If $DH_B$ is changed by an attacker, Alice cannot decrypt the message anymore.
 \begin{figure}[H]
   \centering
